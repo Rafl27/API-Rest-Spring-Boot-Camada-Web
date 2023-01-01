@@ -2,13 +2,20 @@ package br.com.alura.forum.service
 
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
+import br.com.alura.forum.mapper.TopicoFormMapper
+import br.com.alura.forum.mapper.TopicoViewMapper
 import br.com.alura.forum.model.Topico
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.stream.Collectors
 
 @Service
-class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(), private val cursoService: CursoService, private val usuarioService: AutorService) {
+class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(),
+                     private val cursoService: CursoService,
+                     private val usuarioService: AutorService,
+                     private val topicoViewMapper: TopicoViewMapper,
+                     private val topicoFormMapper: TopicoFormMapper
+) {
 
 //    init {
 //        val topico1 = Topico(
@@ -58,24 +65,15 @@ class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(), p
 
     //DTOs que são usados apenas para visualização por um usuário, como listar abaixo, podem ser chamados de views. Isso é uma boa prática.
     fun listar(): List<TopicoView> {
-     return topicos.stream().map{ topico -> TopicoView(
-         id = topico.id,
-         titulo = topico.titulo,
-         mensagem = topico.mensagem,
-         dataCriacao = topico.dataCriacao,
-         status = topico.status
-     )}.collect(Collectors.toList())
+     return topicos.stream().map{
+             topico -> topicoViewMapper.map(topico)
+     }.collect(Collectors.toList())
     }
 
     fun buscarPorId(id: Long): TopicoView {
         //returns the first topicos that matches the given id. (Ids are unique, so it's not a problem to find only one)
         val topico = topicos.first { it.id == id }
-        return TopicoView(
-            id = topico.id,
-            titulo = topico.titulo,
-            mensagem = topico.mensagem,
-            dataCriacao = topico.dataCriacao,
-            status = topico.status)
+        return topicoViewMapper.map(topico)
     }
 
 //    fun cadastrar(topico: Topico): Topico {
@@ -85,15 +83,11 @@ class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(), p
 //    }
 
     //post por meio de um DTO
-    fun cadastrar(dto: NovoTopicoForm): String {
-        topicos = topicos.plus(Topico(
-            id = topicos.size.toLong() + 1,
-            titulo = dto.titulo,
-            mensagem = dto.mensagem,
-            curso = cursoService.buscarPorId(dto.idCurso),
-            autor = usuarioService.buscarPorId(dto.idAutor)
-        )).toMutableList()
-        return "Tópico: ${dto.titulo} adicionado com sucesso no curso ${cursoService.buscarPorId(dto.idCurso).nome} / Submitted by: ${usuarioService.buscarPorId(dto.idAutor).nome}"
+    fun cadastrar(dto: NovoTopicoForm) {
+        val topico = topicoFormMapper.map(dto)
+        topico.id = topicos.size.toLong() + 1
+        topicos = topicos.plus(topico).toMutableList()
+        println("Tópico: ${dto.titulo} adicionado com sucesso no curso ${cursoService.buscarPorId(dto.idCurso).nome} / Submitted by: ${usuarioService.buscarPorId(dto.idAutor).nome}")
 
     }
 
