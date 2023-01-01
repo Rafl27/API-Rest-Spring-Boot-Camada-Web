@@ -1,5 +1,6 @@
 package br.com.alura.forum
 
+import br.com.alura.forum.model.Usuario
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
