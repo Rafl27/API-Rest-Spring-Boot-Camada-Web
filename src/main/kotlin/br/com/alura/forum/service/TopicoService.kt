@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class TopicoService {
+class TopicoService (private  var topicos : List<Topico>){
 
-    fun listar(): List<Topico> {
-        val topico = Topico(
+    init {
+        val topico1 = Topico(
             id = 1,
             titulo = "Duvida Kotlin",
             mensagem = "muito hard isso aqui",
@@ -24,7 +24,43 @@ class TopicoService {
                 email = "rafl@gmail.com"
             ),
         )
-        return Arrays.asList(topico, topico, topico)
+        val topico2 = Topico(
+            id = 2,
+            titulo = "Duvida Kotlin1",
+            mensagem = "muito hard isso aqui",
+            curso = Curso(
+                id= 2,
+                nome = "Kotlin",
+                categoria = "Programação"),
+            autor = Usuario(
+                id = 1,
+                nome = "Rafael",
+                email = "rafl@gmail.com"
+            ),
+        )
+        val topico3 = Topico(
+            id = 3,
+            titulo = "Duvida Kotlin2",
+            mensagem = "muito hard isso aqui",
+            curso = Curso(
+                id= 2,
+                nome = "Kotlin",
+                categoria = "Programação"),
+            autor = Usuario(
+                id = 1,
+                nome = "Rafael",
+                email = "rafl@gmail.com"
+            ),
+        )
+        topicos =  Arrays.asList(topico1, topico2, topico3)
+    }
+    fun listar(): List<Topico> {
+     return topicos;
+    }
+
+    fun buscarPorId(id: Long): Topico {
+        //returns the first topicos that matches the given id. (Ids are unique, so it's not a problem to find only one)
+        return topicos.first { it.id == id }
     }
 
 }
