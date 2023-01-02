@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull
 data class RespostaForm(
 //    @field:NotEmpty
 //    @Size(min = 3, max = 500)
-    val mensagem: String,
+    var mensagem: String,
 //    @field:NotEmpty
     val topicoId: Long,
 //    @field:NotEmpty

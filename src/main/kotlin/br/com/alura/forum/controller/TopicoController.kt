@@ -1,10 +1,15 @@
 package br.com.alura.forum.controller
 
+import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
+import br.com.alura.forum.model.Topico
 import br.com.alura.forum.service.TopicoService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 @RestController
@@ -14,6 +19,11 @@ class TopicoController (private val service : TopicoService){
     @GetMapping
     fun listar(): List<TopicoView> {
         return service.listar();
+    }
+
+    @GetMapping("/completo/{id}")
+    fun listarTopicoCompleto(@PathVariable id:Long): Topico {
+        return service.buscarPorIdCompleto(id);
     }
 
     //anything between curly brackets means that it's a dynamic parameter.
@@ -49,8 +59,25 @@ class TopicoController (private val service : TopicoService){
     //Post utilizando DTO
     //By using @Valid, Spring will check the validations(bean validations) that are present in the NovoTopicoForm DTO, like NotEmpty, Size, and notNull.
     @PostMapping
-    fun cadastrar (@RequestBody @Valid dto: NovoTopicoForm) {
-        service.cadastrar(dto);
+    fun cadastrar (@RequestBody @Valid dto: NovoTopicoForm, uriBuilder: UriComponentsBuilder): ResponseEntity<TopicoView> {
+        val topicoView = service.cadastrar(dto);
+        val uri = uriBuilder.path("/topicos/${topicoView.id}").build().toUri()
+        return ResponseEntity.created(uri).body(topicoView);
+
+    }
+
+    @PutMapping
+    @ResponseBody
+    fun atualizar(@RequestBody @Valid form: AtualizacaoTopicoForm): String {
+        return service.atualizar(form);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    //Como é um delete o correto é retornar o status 204
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deletar(@PathVariable id: Long): String {
+        return service.delete(id);
     }
 
 }

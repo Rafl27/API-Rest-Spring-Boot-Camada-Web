@@ -21,9 +21,30 @@ class RespostaController(private val respostaService: RespostaService) {
 //    }
     @PostMapping
     @ResponseBody
-    fun addResposta(@RequestBody resposta: RespostaForm) : String{
-        respostaService.addResposta(resposta)
-        val resp = respostaService.addResposta(resposta)
-        return resp
+    fun addResposta(@RequestBody resposta: RespostaForm): String {
+//        respostaService.addResposta(resposta)
+//        val resp =
+        return respostaService.addResposta(resposta)
+    }
+
+    @DeleteMapping("/{idTopico}/{idAutor}/{idResposta}")
+    @ResponseBody
+    fun deleteResposta(
+        @PathVariable idResposta: Long,
+        @PathVariable idAutor: Long,
+        @PathVariable idTopico: Long
+    ) {
+        respostaService.deleteResposta(idResposta, idAutor, idTopico)
+        println("chegou 😎👍🏻")
+    }
+
+    @PutMapping("/{idTopico}/{idAutor}/{idResposta}")
+    fun updateResposta(
+        @PathVariable idResposta: Long,
+        @PathVariable idAutor: Long,
+        @PathVariable idTopico: Long,
+        @RequestBody mensagem: String
+    ) {
+        respostaService.editarResposta(idResposta, idAutor, idTopico, mensagem)
     }
 }

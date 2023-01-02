@@ -1,10 +1,12 @@
 package br.com.alura.forum.service
 
+import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.mapper.TopicoFormMapper
 import br.com.alura.forum.mapper.TopicoViewMapper
 import br.com.alura.forum.model.Curso
+import br.com.alura.forum.model.Resposta
 import br.com.alura.forum.model.Topico
 import br.com.alura.forum.model.Usuario
 import org.springframework.stereotype.Service
@@ -69,7 +71,7 @@ class TopicoService(
 //    }
 
     //post por meio de um DTO
-    fun cadastrar(dto: NovoTopicoForm) {
+    fun cadastrar(dto: NovoTopicoForm): TopicoView {
         val topico = topicoFormMapper.map(dto)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico).toMutableList()
@@ -80,7 +82,30 @@ class TopicoService(
                 ).nome
             }"
         )
+        return topicoViewMapper.map(topico)
+    }
 
+    fun atualizar(form: AtualizacaoTopicoForm): String {
+        val tituloAntigo = buscarPorIdCompleto(form.id).titulo
+        val mensagemAntiga = buscarPorIdCompleto(form.id).mensagem
+        buscarPorIdCompleto(form.id).titulo = form.titulo
+        buscarPorIdCompleto(form.id).mensagem = form.mensagem
+        return "Tópico: $tituloAntigo atualizado com sucesso para ${form.titulo} \n Mensagem: $mensagemAntiga atualizada com sucesso para ${form.mensagem}"
+    }
+
+    fun delete(id: Long):String {
+        val nomeTopico = buscarPorId(id).titulo
+        val topico = buscarPorIdCompleto(id)
+        topicos.remove(topico)
+        return "Tópico: $nomeTopico eliminado com sucesso."
+    }
+
+    fun retornaRespostas(id : Long): List<Resposta> {
+        return buscarPorIdCompleto(id).respostas
+    }
+
+    fun getTopicosArraySize () : Int {
+        return topicos.size
     }
 
 }
