@@ -1,6 +1,7 @@
 package br.com.alura.forum.controller
 
 import br.com.alura.forum.dto.RespostaForm
+import br.com.alura.forum.model.Resposta
 import br.com.alura.forum.service.RespostaService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
@@ -19,7 +20,10 @@ class RespostaController(private val respostaService: RespostaService) {
 //        respostaService.addResposta(resposta)
 //    }
     @PostMapping
-    fun addResposta(@RequestBody resposta: RespostaForm) {
+    @ResponseBody
+    fun addResposta(@RequestBody resposta: RespostaForm) : String{
         respostaService.addResposta(resposta)
+        val resp = respostaService.addResposta(resposta)
+        return resp
     }
 }

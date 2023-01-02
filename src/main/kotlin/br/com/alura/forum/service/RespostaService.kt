@@ -16,15 +16,25 @@ class RespostaService(
 ) {
     //add a new answer.
     fun addResposta(resposta: RespostaForm): String {
-        if(topicoService.buscarPorIdCompleto(resposta.topicoId))
-        topicoService.buscarPorIdCompleto(resposta.topicoId).respostas.plus(
-            Resposta(
-                id = respostas.size + 1.toLong(),
-                mensagem = resposta.mensagem,
-                autor = autorService.buscarPorId(resposta.idAutor),
-                topico = topicoService.buscarPorId(resposta.topicoId)
+        if(topicoService.verificaSeTopicoExiste(resposta.topicoId)){
+            topicoService.buscarPorIdCompleto(resposta.topicoId).respostas.plus(
+                Resposta(
+                    id = respostas.size + 1.toLong(),
+                    mensagem = resposta.mensagem,
+                    autor = autorService.buscarPorId(resposta.idAutor),
+                    topico = topicoService.buscarPorId(resposta.topicoId)
+                )
             )
-        )
-        return "Resposta ${resposta.mensagem} adicionada com sucesso ao tópico ${topicoService.buscarPorIdCompleto(resposta.topicoId).titulo} por ${autorService.buscarPorId(resposta.idAutor).nome} - ${autorService.buscarPorId(resposta.idAutor).email}"
+            println("Resposta ${resposta.mensagem} adicionada com sucesso ao tópico ${topicoService.buscarPorIdCompleto(resposta.topicoId).titulo} por ${autorService.buscarPorId(resposta.idAutor).nome} - ${autorService.buscarPorId(resposta.idAutor).email}")
+
+            return "Resposta ${resposta.mensagem} adicionada com sucesso ao tópico ${topicoService.buscarPorIdCompleto(resposta.topicoId).titulo} por ${autorService.buscarPorId(resposta.idAutor).nome} - ${autorService.buscarPorId(resposta.idAutor).email}"
+
+
+        }
+        else{
+            println("Este tópico ainda não existe.")
+            return "Este tópico ainda não existe."
+        }
+
     }
 }

@@ -4,7 +4,9 @@ import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
 import br.com.alura.forum.mapper.TopicoFormMapper
 import br.com.alura.forum.mapper.TopicoViewMapper
+import br.com.alura.forum.model.Curso
 import br.com.alura.forum.model.Topico
+import br.com.alura.forum.model.Usuario
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.stream.Collectors
@@ -24,44 +26,17 @@ class TopicoService(
 //            titulo = "Duvida Kotlin",
 //            mensagem = "muito hard isso aqui",
 //            curso = Curso(
-//                id= 2,
+//                id = 2,
 //                nome = "Kotlin",
-//                categoria = "Programação"),
+//                categoria = "Programação"
+//            ),
 //            autor = Usuario(
 //                id = 1,
 //                nome = "Rafael",
 //                email = "rafl@gmail.com"
 //            ),
 //        )
-//        val topico2 = Topico(
-//            id = 2,
-//            titulo = "Duvida Kotlin1",
-//            mensagem = "muito hard isso aqui",
-//            curso = Curso(
-//                id= 2,
-//                nome = "Kotlin",
-//                categoria = "Programação"),
-//            autor = Usuario(
-//                id = 1,
-//                nome = "Rafael",
-//                email = "rafl@gmail.com"
-//            ),
-//        )
-//        val topico3 = Topico(
-//            id = 3,
-//            titulo = "Duvida Kotlin2",
-//            mensagem = "muito hard isso aqui",
-//            curso = Curso(
-//                id= 2,
-//                nome = "Kotlin",
-//                categoria = "Programação"),
-//            autor = Usuario(
-//                id = 1,
-//                nome = "Rafael",
-//                email = "rafl@gmail.com"
-//            ),
-//        )
-//        topicos =  Arrays.asList(topico1, topico2, topico3)
+//        topicos = Arrays.asList(topico1)
 //    }
 
     //DTOs que são usados apenas para visualização por um usuário, como listar abaixo, podem ser chamados de views. Isso é uma boa prática.
@@ -81,6 +56,10 @@ class TopicoService(
         //returns the first topicos that matches the given id. (Ids are unique, so it's not a problem to find only one)
         val topico = topicos.first { it.id == id }
         return topico
+    }
+
+    fun verificaSeTopicoExiste(id: Long): Boolean {
+        return topicos.any { it.id == id }
     }
 
 //    fun cadastrar(topico: Topico): Topico {
