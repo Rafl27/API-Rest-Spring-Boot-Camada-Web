@@ -11,6 +11,4 @@ data class NovoTopicoForm(
     @field:NotEmpty val mensagem: String,
     @field:NotNull val idCurso: Long,
     @field:NotNull val idAutor: Long
-) {
-
-}
+)

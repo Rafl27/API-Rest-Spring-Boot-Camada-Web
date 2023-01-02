@@ -10,11 +10,12 @@ import java.util.*
 import java.util.stream.Collectors
 
 @Service
-class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(),
-                     private val cursoService: CursoService,
-                     private val usuarioService: AutorService,
-                     private val topicoViewMapper: TopicoViewMapper,
-                     private val topicoFormMapper: TopicoFormMapper
+class TopicoService(
+    private var topicos: MutableList<Topico> = ArrayList(),
+    private val cursoService: CursoService,
+    private val usuarioService: AutorService,
+    private val topicoViewMapper: TopicoViewMapper,
+    private val topicoFormMapper: TopicoFormMapper
 ) {
 
 //    init {
@@ -65,15 +66,21 @@ class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(),
 
     //DTOs que são usados apenas para visualização por um usuário, como listar abaixo, podem ser chamados de views. Isso é uma boa prática.
     fun listar(): List<TopicoView> {
-     return topicos.stream().map{
-             topico -> topicoViewMapper.map(topico)
-     }.collect(Collectors.toList())
+        return topicos.stream().map { topico ->
+            topicoViewMapper.map(topico)
+        }.collect(Collectors.toList())
     }
 
     fun buscarPorId(id: Long): TopicoView {
         //returns the first topicos that matches the given id. (Ids are unique, so it's not a problem to find only one)
         val topico = topicos.first { it.id == id }
         return topicoViewMapper.map(topico)
+    }
+
+    fun buscarPorIdCompleto(id: Long): Topico {
+        //returns the first topicos that matches the given id. (Ids are unique, so it's not a problem to find only one)
+        val topico = topicos.first { it.id == id }
+        return topico
     }
 
 //    fun cadastrar(topico: Topico): Topico {
@@ -87,7 +94,13 @@ class TopicoService (private  var topicos : MutableList<Topico> = ArrayList(),
         val topico = topicoFormMapper.map(dto)
         topico.id = topicos.size.toLong() + 1
         topicos = topicos.plus(topico).toMutableList()
-        println("Tópico: ${dto.titulo} adicionado com sucesso no curso ${cursoService.buscarPorId(dto.idCurso).nome} / Submitted by: ${usuarioService.buscarPorId(dto.idAutor).nome}")
+        println(
+            "Tópico: ${dto.titulo} adicionado com sucesso no curso ${cursoService.buscarPorId(dto.idCurso).nome} / Submitted by: ${
+                usuarioService.buscarPorId(
+                    dto.idAutor
+                ).nome
+            }"
+        )
 
     }
 

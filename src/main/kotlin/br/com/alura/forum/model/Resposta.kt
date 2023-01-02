@@ -1,5 +1,6 @@
 package br.com.alura.forum.model
 
+import br.com.alura.forum.dto.TopicoView
 import java.time.LocalDateTime
 
 data class Resposta(
@@ -7,7 +8,7 @@ data class Resposta(
     val mensagem: String,
     val dataCriacao: LocalDateTime = LocalDateTime.now(),
     val autor: Usuario,
-    val topico: Topico,
-    val solucao: Boolean
+    val topico: TopicoView,
+    val solucao: Boolean = false
 ) {
 }
