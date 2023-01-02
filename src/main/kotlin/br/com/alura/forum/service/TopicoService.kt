@@ -3,12 +3,11 @@ package br.com.alura.forum.service
 import br.com.alura.forum.dto.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.NovoTopicoForm
 import br.com.alura.forum.dto.TopicoView
+import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.TopicoFormMapper
 import br.com.alura.forum.mapper.TopicoViewMapper
-import br.com.alura.forum.model.Curso
 import br.com.alura.forum.model.Resposta
 import br.com.alura.forum.model.Topico
-import br.com.alura.forum.model.Usuario
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.stream.Collectors
@@ -19,7 +18,8 @@ class TopicoService(
     private val cursoService: CursoService,
     private val usuarioService: AutorService,
     private val topicoViewMapper: TopicoViewMapper,
-    private val topicoFormMapper: TopicoFormMapper
+    private val topicoFormMapper: TopicoFormMapper,
+    private val notFoundMessage: String = "Tópico não encontrado."
 ) {
 
 //    init {
@@ -93,11 +93,22 @@ class TopicoService(
         return "Tópico: $tituloAntigo atualizado com sucesso para ${form.titulo} \n Mensagem: $mensagemAntiga atualizada com sucesso para ${form.mensagem}"
     }
 
-    fun delete(id: Long):String {
-        val nomeTopico = buscarPorId(id).titulo
-        val topico = buscarPorIdCompleto(id)
-        topicos.remove(topico)
-        return "Tópico: $nomeTopico eliminado com sucesso."
+//    fun delete(id: Long): String {
+//        val nomeTopico = buscarPorId(id).titulo
+//        if (!verificaSeTopicoExiste(id)) {
+//            return NotFoundException(notFoundMessage).toString()
+//        }
+//        else{
+//            val topico = buscarPorIdCompleto(id)
+//            topicos.remove(topico)
+//            return "Tópico: $nomeTopico eliminado com sucesso."
+//        }
+//    }
+
+    fun delete (id: Long) {
+        val topico = topicos.stream().filter {t -> t.id == id}
+            .findFirst().orElseThrow { NotFoundException(notFoundMessage) }
+        topicos = topicos.minus(topico).toMutableList()
     }
 
     fun retornaRespostas(id : Long): List<Resposta> {

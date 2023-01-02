@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
+import java.io.Serializable
 import java.util.*
 
 @RestController
@@ -76,7 +77,7 @@ class TopicoController (private val service : TopicoService){
     @ResponseBody
     //Como é um delete o correto é retornar o status 204
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deletar(@PathVariable id: Long): String {
+    fun deletar(@PathVariable id: Long): Unit {
         return service.delete(id);
     }
 
